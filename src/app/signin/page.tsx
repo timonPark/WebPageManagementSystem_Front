@@ -23,7 +23,9 @@ function Login() {
       callbackUrl: "/",
     });
   };
-
+  console.log(`%%%%%%%%%%%%%%%%%%%`);
+  console.log(providers);
+  console.log(`%%%%%%%%%%%%%%%%%%%`);
   return (
     <main className="flex min-h-screen flex-col items-center space-y-10 p-24">
       <h1 className="text-4xl font-semibold">Login</h1>

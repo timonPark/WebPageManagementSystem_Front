@@ -4,10 +4,11 @@ import KakaoProvider from "next-auth/providers/kakao";
 import NaverProvider from "next-auth/providers/naver";
 import GoogleProvider from "next-auth/providers/google";
 import { env } from "process";
-import { LOCATOR, Post } from "@/app/utils/axios";
+import {Get, LOCATOR, Post} from "@/app/utils/axios";
 import { SocialUser } from "@/app/types/user/user.type";
 import { JWT } from "next-auth/jwt";
 import { Account } from "next-auth";
+import Error from "next/error";
 
 type NextAuthTokenType =
   | {
@@ -90,12 +91,17 @@ const handler = NextAuth({
       console.log(account);
       console.log("****************************");
       if (account) {
-        const result = await Post(
-          LOCATOR.backend + "/user/social",
-          createSocialUser(token, account)
-        );
-        console.log(`result`);
-        console.log(result);
+        const isJoinResult = await Get(LOCATOR.backend + "/user/email/" + token.email);
+        if (isJoinResult.data !== ''){
+          token['errorMessage'] = "이미 가입된 계정 입니다."
+        }
+        // const result = await Post(
+        //   LOCATOR.backend + "/user/social",
+        //   createSocialUser(token, account)
+        // );
+        // console.log(`result`);
+        // console.log(result);
+
         //token['id'] = result.data.data;
         token["loginType"] = account.provider;
       }
@@ -104,11 +110,15 @@ const handler = NextAuth({
     async session({ session, token, user }) {
       //session['userId'] = token['id'];
       session["loginType"] = token["loginType"];
+      session["errorMessage"] = token["errorMessage"];
+      console.log('$$$$$$$$$$$$$$$$$');
+      console.log(session);
+      console.log('$$$$$$$$$$$$$$$$$');
       return session;
     },
   },
   pages: {
-    signIn: "/signin",
+    signIn: "/signin?value=aaaa",
   },
 });
 
