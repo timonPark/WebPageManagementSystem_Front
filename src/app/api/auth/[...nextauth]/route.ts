@@ -3,33 +3,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import KakaoProvider from "next-auth/providers/kakao";
 import NaverProvider from "next-auth/providers/naver";
 import GoogleProvider from "next-auth/providers/google";
-import { env } from "process";
-import {Get, LOCATOR, Post} from "@/app/utils/axios";
-import { SocialUser } from "@/app/types/user/user.type";
-import { JWT } from "next-auth/jwt";
+import {LOCATOR, Post} from "@/app/utils/axios";
 import { Account } from "next-auth";
-import Error from "next/error";
 
-type NextAuthTokenType =
-  | {
-      name: string;
-      email: string;
-      picture: string;
-      sub: string;
-      iat: string;
-      exp: string;
-      jti: string;
-    }
-  | undefined;
-
-const createSocialUser = (token: JWT, account: Account) => ({
-  name: token.name,
-  email: token.email,
-  nickname: token.name,
-  loginType: account.provider,
-  socialId: account.providerAccountId,
-  profilePicture: token.picture,
-});
+const createSocialRequestDto = (account: Account) => ({
+  accesstoken: account.access_token
+})
 
 const handler = NextAuth({
   providers: [
@@ -44,21 +23,6 @@ const handler = NextAuth({
           return;
         }
         console.log(`credentials: ${JSON.stringify(credentials)}`);
-        const user: any = {
-          csrfToken: "1",
-          email: "m05214@naver.com",
-          name: "박종훈",
-          passowrd: "password",
-        };
-        if (
-          credentials.email === user.email &&
-          credentials.password === user.passowrd
-        ) {
-          console.log(`user: ${JSON.stringify(user)}`);
-          return user;
-        } else {
-          return null;
-        }
       },
     }),
     KakaoProvider({
@@ -84,36 +48,30 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account }) {
-      console.log("****************************");
-      console.log(`token: ${token}`);
-      console.log(token);
-      console.log(`account: ${account}`);
-      console.log(account);
-      console.log("****************************");
+      // console.log("****************************");
+      // console.log(`token: ${token}`);
+      // console.log(token);
+      // console.log(`account: ${account}`);
+      // console.log(account);
+      // console.log("****************************");
       if (account) {
-        const isJoinResult = await Get(LOCATOR.backend + "/user/email/" + token.email);
-        if (isJoinResult.data !== ''){
-          token['errorMessage'] = "이미 가입된 계정 입니다."
+        try {
+          const result = await Post(
+            LOCATOR.backend + "/user/social/" + account.provider,
+            createSocialRequestDto(account)
+          );
+          token["accessToken"] = result.data;
+        } catch(error) {
+          token["errorMessage"] = error.response.data;
         }
-        // const result = await Post(
-        //   LOCATOR.backend + "/user/social",
-        //   createSocialUser(token, account)
-        // );
-        // console.log(`result`);
-        // console.log(result);
-
-        //token['id'] = result.data.data;
         token["loginType"] = account.provider;
       }
       return token;
     },
     async session({ session, token, user }) {
-      //session['userId'] = token['id'];
       session["loginType"] = token["loginType"];
       session["errorMessage"] = token["errorMessage"];
-      console.log('$$$$$$$$$$$$$$$$$');
-      console.log(session);
-      console.log('$$$$$$$$$$$$$$$$$');
+      session["accessToken"] = token["accessToken"];
       return session;
     },
   },
