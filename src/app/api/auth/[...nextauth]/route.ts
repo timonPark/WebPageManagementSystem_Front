@@ -79,3 +79,5 @@ const handler = NextAuth({
     signIn: "/signin?value=aaaa",
   },
 });
+
+export { handler as GET, handler as POST };
