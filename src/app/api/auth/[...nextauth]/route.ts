@@ -7,8 +7,9 @@ import {LOCATOR, Post} from "@/app/utils/axios";
 import { Account } from "next-auth";
 
 const createSocialRequestDto = (account: Account) => ({
-  accesstoken: account.access_token
+  accessToken: account.access_token
 })
+
 
 const handler = NextAuth({
   providers: [
@@ -17,7 +18,7 @@ const handler = NextAuth({
       credentials: {
         email: { label: "이메일", type: "text", placeholder: "이메일 주소" },
         password: { label: "비밀번호", type: "password" },
-      },
+      },// @ts-ignore
       async authorize(credentials, req) {
         if (!credentials) {
           return;
@@ -48,31 +49,32 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account }) {
-      // console.log("****************************");
-      // console.log(`token: ${token}`);
-      // console.log(token);
-      // console.log(`account: ${account}`);
-      // console.log(account);
-      // console.log("****************************");
+      console.log("****************************");
+      console.log(`token: ${token}`);
+      console.log(token);
+      console.log(`account: ${account}`);
+      console.log(account);
+      console.log("****************************");
       if (account) {
         try {
           const result = await Post(
             LOCATOR.backend + "/user/social/" + account.provider,
             createSocialRequestDto(account)
           );
-          token["accessToken"] = result.data;
+          token["accessToken"] = result.data.data.accessToken;
         } catch(error) {
-          token["errorMessage"] = error.response.data;
+          token["errorMessage"] = error
         }
         token["loginType"] = account.provider;
       }
       return token;
     },
     async session({ session, token, user }) {
-      session["loginType"] = token["loginType"];
-      session["errorMessage"] = token["errorMessage"];
-      session["accessToken"] = token["accessToken"];
-      return session;
+      const sessionObj: any = session;
+      sessionObj["loginType"] = token["loginType"];
+      sessionObj["errorMessage"] = token["errorMessage"];
+      sessionObj["accessToken"] = token["accessToken"];
+      return sessionObj;
     },
   },
   pages: {
