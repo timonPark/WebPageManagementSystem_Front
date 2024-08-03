@@ -82,7 +82,7 @@ const handler = NextAuth({
     },
   },
   pages: {
-    signIn: "/signin?value=aaaa",
+    signIn: "/signIn?value=aaaa",
   },
 });
 

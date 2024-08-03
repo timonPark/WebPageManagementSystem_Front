@@ -10,8 +10,8 @@ function SignInButton() {
   const loginType = session ? result["loginType"] : "";
 
   const { push } = useRouter();
-  if (session && session['errorMessage']) {
-    return <ErrorMessageBox errorMessage={session['errorMessage']} signOut={signOut}></ErrorMessageBox>
+  if (session && result['errorMessage']) {
+    return <ErrorMessageBox errorMessage={result['errorMessage']} inputfuc={signOut} isError={true} ></ErrorMessageBox>
   } else if (session && session?.user) {
     return (
       <button
