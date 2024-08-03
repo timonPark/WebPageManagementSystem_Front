@@ -49,12 +49,12 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account }) {
-      console.log("****************************");
-      console.log(`token: ${token}`);
-      console.log(token);
-      console.log(`account: ${account}`);
-      console.log(account);
-      console.log("****************************");
+      // console.log("****************************");
+      // console.log(`token: ${token}`);
+      // console.log(token);
+      // console.log(`account: ${account}`);
+      // console.log(account);
+      // console.log("****************************");
       if (account) {
         try {
           const result = await Post(
@@ -63,7 +63,11 @@ const handler = NextAuth({
           );
           token["accessToken"] = result.data.data.accessToken;
         } catch(error) {
-          token["errorMessage"] = error
+          const errorObj: any = error;
+          // console.log(`----------------`);
+          // console.log(errorObj.response.data.message);
+          // console.log(`----------------`);
+          token["errorMessage"] = errorObj.response.data.message;
         }
         token["loginType"] = account.provider;
       }
