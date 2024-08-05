@@ -20,10 +20,16 @@ const handler = NextAuth({
         password: { label: "비밀번호", type: "password" },
       },// @ts-ignore
       async authorize(credentials, req) {
-        if (!credentials) {
-          return;
+        const valueEmpty: string = '[object HTMLInputElement]'
+        if (credentials?.email !== valueEmpty && credentials?.password !== valueEmpty) {
+          console.log(`credentials?.email: ${credentials?.email}`);
+          console.log(`credentials?.password: ${credentials?.password}`);
+          return {
+            email: credentials?.email,
+            password: credentials?.password,
+          }
         }
-        console.log(`credentials: ${JSON.stringify(credentials)}`);
+        return null;
       },
     }),
     KakaoProvider({
@@ -49,13 +55,13 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, account }) {
-      // console.log("****************************");
-      // console.log(`token: ${token}`);
-      // console.log(token);
-      // console.log(`account: ${account}`);
-      // console.log(account);
-      // console.log("****************************");
-      if (account) {
+      console.log("****************************");
+      console.log(`token: ${token}`);
+      console.log(token);
+      console.log(`account: ${account}`);
+      console.log(account);
+      console.log("****************************");
+      if (account?.provider !== 'credentials' && account) {
         try {
           const result = await Post(
             LOCATOR.backend + "/user/social/" + account.provider,
@@ -71,6 +77,9 @@ const handler = NextAuth({
         }
         token["loginType"] = account.provider;
       }
+      if (account?.provider === 'credentials' && account) {
+        console.log(account);
+      }
       return token;
     },
     async session({ session, token, user }) {
@@ -82,7 +91,7 @@ const handler = NextAuth({
     },
   },
   pages: {
-    signIn: "/signIn?value=aaaa",
+    signIn: "/signIn",
   },
 });
 
