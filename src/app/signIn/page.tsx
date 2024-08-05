@@ -1,17 +1,49 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
+import {useRouter, useSearchParams} from 'next/navigation'
 import { getProviders, signIn } from "next-auth/react";
+import ErrorMessageBox from "@/app/components/ErrorMessageBox";
 
-function Login() {
-  const [providers, setProviders] = useState(null);
+interface LoginStatus {
+  errorCode: string;
+  isError: boolean;
+  errorMessage: string;
+}
 
-  useEffect(() => {
-    (async () => {
-      const res: any = await getProviders();
-      console.log(res);
-      setProviders(res);
-    })();
-  }, []);
+const Login: React.FC = () => {
+  const router = useRouter();
+  const [providers, setProviders] = useState<LoginStatus>({
+    errorCode: '',
+    isError: false,
+    errorMessage: '',
+  });
+  const searchParams = useSearchParams();
+  if (searchParams) {
+    console.log(`-------------------`);
+    console.log(searchParams.get('error'));
+    console.log(`-------------------`);
+
+    const getErrorCode = searchParams.get('error');
+    if (getErrorCode !== null && providers.errorCode === '') {
+      setProviders({
+        ...providers,
+        errorCode: getErrorCode,
+        isError: true,
+        errorMessage: '로그인에 실패하였습니다. 입력한 정보를 다시 확인하세요'
+      })
+    }
+  }
+
+  const errorMessageReset = () => {
+    setProviders({
+      ...providers,
+      errorCode: '',
+      isError: false,
+      errorMessage: ''
+    })
+    router.push('/')
+  }
+
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
@@ -23,11 +55,15 @@ function Login() {
       callbackUrl: "/",
     });
   };
+
+
+
   console.log(`%%%%%%%%%%%%%%%%%%%`);
   console.log(providers);
   console.log(`%%%%%%%%%%%%%%%%%%%`);
   return (
     <main className="flex min-h-screen flex-col items-center space-y-10 p-24">
+      <ErrorMessageBox errorMessage={providers.errorMessage} inputfuc={errorMessageReset} isError={providers.isError}></ErrorMessageBox>
       <h1 className="text-4xl font-semibold">Login</h1>
       <div>
         <div>
