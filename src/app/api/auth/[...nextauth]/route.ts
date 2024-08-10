@@ -10,6 +10,11 @@ const createSocialRequestDto = (account: Account) => ({
   accessToken: account.access_token
 })
 
+const createLoginRequestDto = (credentials: { email: string; password: string; } | undefined) => ({
+  email: credentials?.email,
+  password: credentials?.password,
+})
+
 
 const handler = NextAuth({
   providers: [
@@ -24,13 +29,27 @@ const handler = NextAuth({
         if (credentials?.email !== valueEmpty && credentials?.password !== valueEmpty) {
           console.log(`credentials?.email: ${credentials?.email}`);
           console.log(`credentials?.password: ${credentials?.password}`);
-          return {
-            email: credentials?.email,
-            password: credentials?.password,
-          }
+          const result = await Post(
+            LOCATOR.backend + "/user/login",
+            createLoginRequestDto(credentials)
+          );
+          console.log(`$$$$$$$$$$$$$$$$$$$$$$`)
+          console.log(result.data.data.accessToken);
+          console.log(`$$$$$$$$$$$$$$$$$$$$$$`)
+          return (
+            {
+              provider: 'credentials',
+              type: 'credentials',
+              email: credentials?.email,
+              accessToken: result.data.data.accessToken,
+              tokenType: 'bearer',
+            }
+
+          )
         }
         return null;
       },
+
     }),
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID ? process.env.KAKAO_CLIENT_ID : "",
@@ -54,12 +73,13 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, user, account, profile, isNewUser }) {
       console.log("****************************");
-      console.log(`token: ${token}`);
-      console.log(token);
-      console.log(`account: ${account}`);
-      console.log(account);
+      console.log(`token: ${JSON.stringify(token)}`);
+      console.log(`user: ${JSON.stringify(user)}`);
+      console.log(`account: ${JSON.stringify(account)}`);
+      console.log(`profile: ${JSON.stringify(profile)}`);
+      console.log(`isNewUser: ${JSON.stringify(isNewUser)}`);
       console.log("****************************");
       if (account?.provider !== 'credentials' && account) {
         try {
@@ -70,16 +90,16 @@ const handler = NextAuth({
           token["accessToken"] = result.data.data.accessToken;
         } catch(error) {
           const errorObj: any = error;
-          // console.log(`----------------`);
-          // console.log(errorObj.response.data.message);
-          // console.log(`----------------`);
           token["errorMessage"] = errorObj.response.data.message;
         }
         token["loginType"] = account.provider;
       }
-      if (account?.provider === 'credentials' && account) {
-        console.log(account);
+      if (user) {
+        const userObj: any = user
+        token["loginType"] = account?.provider
+        token['accessToken'] =  userObj['accessToken'];
       }
+
       return token;
     },
     async session({ session, token, user }) {
