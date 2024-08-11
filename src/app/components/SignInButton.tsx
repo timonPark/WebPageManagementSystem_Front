@@ -30,8 +30,10 @@ function SignInButton() {
                 loginType === "naver"
                   ? "/icon/naver.png"
                   : loginType === "kakao"
-                  ? "/icon/kakao.png"
-                  : ""
+                    ? "/icon/kakao.png"
+                    : loginType === "google"
+                      ? "/icon/google.png"
+                      : '/icon/login.png'
               }
             ></input>
           )}

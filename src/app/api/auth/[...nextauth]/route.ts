@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import KakaoProvider from "next-auth/providers/kakao";
 import NaverProvider from "next-auth/providers/naver";
 import GoogleProvider from "next-auth/providers/google";
-import {LOCATOR, Post} from "@/app/utils/axios";
+import {Get, LOCATOR, Post} from "@/app/utils/axios";
 import { Account } from "next-auth";
 
 const createSocialRequestDto = (account: Account) => ({
@@ -27,22 +27,22 @@ const handler = NextAuth({
       async authorize(credentials, req) {
         const valueEmpty: string = '[object HTMLInputElement]'
         if (credentials?.email !== valueEmpty && credentials?.password !== valueEmpty) {
-          console.log(`credentials?.email: ${credentials?.email}`);
-          console.log(`credentials?.password: ${credentials?.password}`);
           const result = await Post(
             LOCATOR.backend + "/user/login",
             createLoginRequestDto(credentials)
           );
-          console.log(`$$$$$$$$$$$$$$$$$$$$$$`)
-          console.log(result.data.data.accessToken);
-          console.log(`$$$$$$$$$$$$$$$$$$$$$$`)
+          const userInfo = await Get(
+            LOCATOR.backend + `/user/getUser/${credentials?.email}`,
+            result.data.data.accessToken
+          )
+
           return (
             {
               provider: 'credentials',
               type: 'credentials',
               email: credentials?.email,
               accessToken: result.data.data.accessToken,
-              tokenType: 'bearer',
+              name: userInfo.data.data.name,
             }
 
           )
@@ -74,13 +74,13 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user, account, profile, isNewUser }) {
-      console.log("****************************");
-      console.log(`token: ${JSON.stringify(token)}`);
-      console.log(`user: ${JSON.stringify(user)}`);
-      console.log(`account: ${JSON.stringify(account)}`);
-      console.log(`profile: ${JSON.stringify(profile)}`);
-      console.log(`isNewUser: ${JSON.stringify(isNewUser)}`);
-      console.log("****************************");
+      // console.log("****************************");
+      // console.log(`token: ${JSON.stringify(token)}`);
+      // console.log(`user: ${JSON.stringify(user)}`);
+      // console.log(`account: ${JSON.stringify(account)}`);
+      // console.log(`profile: ${JSON.stringify(profile)}`);
+      // console.log(`isNewUser: ${JSON.stringify(isNewUser)}`);
+      // console.log("****************************");
       if (account?.provider !== 'credentials' && account) {
         try {
           const result = await Post(
@@ -97,6 +97,7 @@ const handler = NextAuth({
       if (user) {
         const userObj: any = user
         token["loginType"] = account?.provider
+        token['name'] = userObj['name'];
         token['accessToken'] =  userObj['accessToken'];
       }
 
