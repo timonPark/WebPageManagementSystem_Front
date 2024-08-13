@@ -32,7 +32,7 @@ const handler = NextAuth({
             createLoginRequestDto(credentials)
           );
           const userInfo = await Get(
-            LOCATOR.backend + `/user/getUser/${credentials?.email}`,
+            LOCATOR.backend + `/user/getUser`,
             result.data.data.accessToken
           )
 
