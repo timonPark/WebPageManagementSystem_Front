@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { FC, useRef, useState } from "react";
+import {FC, useEffect, useRef, useState} from "react";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import { sidebarStructure } from "./structure";
@@ -9,6 +9,14 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
+  const [activeLink, setActiveLink] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // 클라이언트 측에서만 실행
+      setActiveLink(window.location.pathname);
+    }
+  }, []);
 
   const username = "Miles Heizer";
   const company = "Unilever";
@@ -18,7 +26,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
 
   const [openedMenu, setOpenedMenu] = useState<Record<string, any>>({});
   const [activeName, setActiveName] = useState("");
-  const activeLink = window.location.pathname;
+
 
   const listRef = useRef<any>({});
 
