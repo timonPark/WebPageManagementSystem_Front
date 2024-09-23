@@ -3,6 +3,7 @@ import {FC, useEffect, useRef, useState} from "react";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import { sidebarStructure } from "./structure";
+import SignInButton from "@/app/components/SignInButton";
 
 interface SidebarProps {
   setExpand: (value: boolean) => void;
@@ -342,7 +343,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
         onMouseLeave={() => handleHoverExpand(false)}
         className={`relative h-screen overflow-hidden`}
       >
-        <SimpleBar style={{ height: "100%" }} autoHide>
+        <SimpleBar style={{height: "100%"}} autoHide>
           <div className="mb-0 list-none text-slate-500">
             <div
               className={`my-8 flex flex-col items-center overflow-x-hidden duration-300 ${
@@ -362,7 +363,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
                 <div
                   className={`rounded-full overflow-hidden duration-300 h-10 w-10 shrink-0`}
                 >
-                  <img src={profilePic} className="block" alt="" />
+                  <img src={profilePic} className="block" alt=""/>
                 </div>
                 <div
                   className={`flex flex-col ${
@@ -389,7 +390,9 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
               </ul>
             </div>
           </div>
+          <SignInButton></SignInButton>
         </SimpleBar>
+
       </div>
     </nav>
   );
