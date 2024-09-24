@@ -4,6 +4,7 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import { sidebarStructure } from "./structure";
 import SignInButton from "@/app/components/SignInButton";
+import {XMarkIcon} from "@heroicons/react/16/solid";
 
 interface SidebarProps {
   setExpand: (value: boolean) => void;
@@ -391,6 +392,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
             </div>
           </div>
           <SignInButton></SignInButton>
+
         </SimpleBar>
 
       </div>
