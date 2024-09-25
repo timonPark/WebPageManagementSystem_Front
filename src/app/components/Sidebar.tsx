@@ -1,10 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import {FC, useEffect, useRef, useState} from "react";
+import React, {FC, useEffect, useRef, useState} from "react";
+import {signOut, useSession} from "next-auth/react";
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 import { sidebarStructure } from "./structure";
 import SignInButton from "@/app/components/SignInButton";
 import {XMarkIcon} from "@heroicons/react/16/solid";
+import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/react";
 
 interface SidebarProps {
   setExpand: (value: boolean) => void;
@@ -12,7 +14,9 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
   const [activeLink, setActiveLink] = useState("");
-
+  const { data: session } = useSession();
+  const result: any = session;
+  const loginType = session ? result["loginType"] : "";
   useEffect(() => {
     if (typeof window !== "undefined") {
       // 클라이언트 측에서만 실행
@@ -345,6 +349,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
         className={`relative h-screen overflow-hidden`}
       >
         <SimpleBar style={{height: "100%"}} autoHide>
+
           <div className="mb-0 list-none text-slate-500">
             <div
               className={`my-8 flex flex-col items-center overflow-x-hidden duration-300 ${
@@ -381,8 +386,51 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
                   </div>
                 </div>
               </a>
-            </div>
 
+            </div>
+            <Menu>
+              <div>
+                <span>박종훈</span>
+                <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                  <span className="absolute -inset-1.5" />
+                  <span className="sr-only">Open user menu</span>
+
+                  <img
+                    alt=""
+                    src={
+                      loginType === "naver"
+                        ? "/icon/naver.png"
+                        : loginType === "kakao"
+                          ? "/icon/kakao.png"
+                          : loginType === "google"
+                            ? "/icon/google.png"
+                            : '/icon/login.png'
+                    }
+                    className="h-8 w-8 rounded-full"
+                  />
+                </MenuButton>
+              </div>
+              <MenuItems
+                transition
+                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+              >
+                <MenuItem>
+                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                    Your Profile
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a href="#" className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                    Settings
+                  </a>
+                </MenuItem>
+                <MenuItem>
+                  <a onClick={() => signOut()} className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100">
+                    Sign out
+                  </a>
+                </MenuItem>
+              </MenuItems>
+            </Menu>
             <div className="mt-3 mb-10 p-0 leading-10">
               <ul className="list-none text-sm font-normal px-3">
                 {sidebarStructure.map((item, index) =>
@@ -391,7 +439,6 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
               </ul>
             </div>
           </div>
-          <SignInButton></SignInButton>
 
         </SimpleBar>
 
