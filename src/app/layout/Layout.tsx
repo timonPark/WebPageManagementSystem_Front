@@ -15,10 +15,7 @@ const Layout: React.FC = () => {
       <Sidebar  setExpand={setSideMenuIsExpand}></Sidebar>
       <main className="flex min-h-screen flex-col items-center justify-between p-24">
         <h1 className="text-5xl font-semibold">AWESOME-BRO</h1>
-
-
       </main>
-
       <Footer></Footer>
     </div>
   )
