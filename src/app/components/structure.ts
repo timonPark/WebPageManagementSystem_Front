@@ -1,6 +1,6 @@
 const sidebarStructure = [
   {
-    id: "dashboard",
+    menuNo: 1,
     title: "Dasbor",
     name: "dasbor",
     parent: true,
@@ -8,49 +8,49 @@ const sidebarStructure = [
     link: "/dashboard"
   },
   {
-    id: "transaksi",
+    menuNo: 2,
     title: "Transaksi",
     name: "transaksi",
     parent: true,
     icon: "transaksi",
     child: [
       {
-        id: "rfq",
+        menuNo: 6,
         title: "RFQ",
         name: "transaksi.rfq",
         link: "/dashboard/rfq",
         icon: "dot"
       },
       {
-        id: "quotation",
+        menuNo: 7,
         title: "Quotation",
         name: "transaksi.quotation",
         link: "/dashboard/quotation",
         icon: "dot"
       },
       {
-        id: "purchase-request",
+        menuNo: 8,
         title: "Purchase Request",
         name: "transaksi.pr",
         link: "/dashboard/purchase-request",
         icon: "dot"
       },
       {
-        id: "purchase-order",
+        menuNo: 9,
         title: "Purchase Order",
         name: "transaksi.po",
         link: "/dashboard/purchase-order",
         icon: "dot"
       },
       {
-        id: "tagihan",
+        menuNo: 10,
         title: "Tagihan",
         name: "transaksi.tagihan",
         link: "/dashboard/invoice",
         icon: "dot"
       },
       {
-        id: "pembayaran",
+        menuNo: 11,
         title: "Pembayaran",
         name: "transaksi.pembayaran",
         link: "/dashboard/payment",
@@ -59,42 +59,42 @@ const sidebarStructure = [
     ]
   },
   {
-    id: "perusahaan",
+    menuNo: 3,
     title: "Perusahaan",
     name: "perusahaan",
     parent: true,
     icon: "perusahaan",
     child: [
       {
-        id: "profile-perusahaan",
+        menuNo: 12,
         title: "Profil Perusahaan",
         name: "perusahaan.profil",
         link: "/dashboard/company-profile",
         icon: "dot"
       },
       {
-        id: "akun-bank",
+        menuNo: 13,
         title: "Akun Bank",
         name: "perusahaan.bank",
         link: "/dashboard/bank-account",
         icon: "dot"
       },
       {
-        id: "alamat",
+        menuNo: 14,
         title: "Alamat",
         name: "perusahaan.alamat",
         link: "/dashboard/company-address/shipping",
         icon: "dot",
         child: [
           {
-            id: "alamat-pengiriman",
+            menuNo: 19,
             title: "Alamat Pengiriman",
             name: "perusahaan.alamat.pengiriman",
             link: "/dashboard/company-address/shipping",
             icon: "dot"
           },
           {
-            id: "alamat-tagihan",
+            menuNo: 20,
             title: "Alamat Tagihan",
             name: "perusahaan.alamat.tagihan",
             link: "/dashboard/company-address/billing",
@@ -103,48 +103,48 @@ const sidebarStructure = [
         ]
       },
       {
-        id: "daftar-akun-pengguna",
+        menuNo: 15,
         title: "Daftar Akun Pengguna",
         name: "perusahaan.akun",
         link: "/dashboard/user-account",
         icon: "dot"
       },
       {
-        id: "departemen",
+        menuNo: 16,
         title: "Departemen",
         name: "perusahaan.department",
         link: "/dashboard/department",
         icon: "dot"
       },
       {
-        id: "manajemen-persetujuan",
+        menuNo: 17,
         title: "Manajemen Persetujuan",
         name: "perusahaan.persetujuan",
         icon: "dot",
         child: [
           {
-            id: "penyetuju-kategori",
+            menuNo: 21,
             title: "Penyetuju Kategori",
             name: "perusahaan.persetujuan.kategori",
             link: "/dashboard/approval/category",
             icon: "dot"
           },
           {
-            id: "penyetuju-departement",
+            menuNo: 22,
             title: "Penyetuju Departemen",
             name: "perusahaan.persetujuan.departemen",
             link: "/dashboard/approval/department",
             icon: "dot"
           },
           {
-            id: "e-procurement",
+            menuNo: 23,
             title: "E-procurement",
             name: "perusahaan.persetujuan.proc",
             link: "/dashboard/approval/eproc",
             icon: "dot"
           },
           {
-            id: "pengaturan",
+            menuNo: 24,
             title: "Pengaturan",
             name: "perusahaan.persetujuan.config",
             link: "/dashboard/approval/configure",
@@ -153,13 +153,13 @@ const sidebarStructure = [
         ]
       },
       {
-        id: "pengaturan-pembelian",
+        menuNo: 18,
         title: "Pengaturan Pembelian",
         name: "perusahaan.pengaturan.pembelian",
         icon: "dot",
         child: [
           {
-            id: "anggaran",
+            menuNo: 25,
             title: "Anggaran",
             name: "perusahaan.pengaturan.pembelian.anggaran",
             link: "/dashboard/purchase-setting/budget",
@@ -170,7 +170,7 @@ const sidebarStructure = [
     ]
   },
   {
-    id: "mou",
+    menuNo: 4,
     title: "MOU",
     name: "mou",
     parent: true,
@@ -178,28 +178,28 @@ const sidebarStructure = [
     link: "/dashboard/mou"
   },
   {
-    id: "pusat-unduh-data",
+    menuNo: 5,
     title: "Pusat Unduh Data",
     name: "pusatunduhdata",
     parent: true,
     icon: "pusatunduhdata",
     child: [
       {
-        id: "unduh-data-transaksi",
+        menuNo: 26,
         title: "Unduh Data Transaksi",
         name: "pusatunduhdata.unduhdatatransaksi",
         link: "/dashboard/download/transaction",
         icon: "dot"
       },
       {
-        id: "unduh-data-perusahaan",
+        menuNo: 27,
         title: "Unduh Data Perusahaan",
         name: "pusatunduhdata.unduhdataperusahaan",
         link: "/dashboard/download/company",
         icon: "dot"
       },
       {
-        id: "unduh-data-mou",
+        menuNo: 28,
         title: "Unduh Data MOU",
         name: "pusatunduhdata.unduhdatamou",
         link: "/dashboard/download/mou",

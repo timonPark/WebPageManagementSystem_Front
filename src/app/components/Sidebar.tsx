@@ -205,7 +205,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
         <a
           role="button"
           tabIndex={0}
-          id={item.id}
+          id={item.menuNo}
           onClick={() => {
             if ("child" in item) {
               handleToggle(item.name);

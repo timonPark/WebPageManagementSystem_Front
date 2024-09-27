@@ -46,6 +46,7 @@ const SignUp: React.FC = () => {
     try {
       const result = await Get(
         "/api/user/checkEmail/" + signUpStatus.email,
+        undefined
       );
       setSignUpStatus({
         ...signUpStatus,
